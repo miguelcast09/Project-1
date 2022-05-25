@@ -30,12 +30,12 @@ Integrating an ELK server allows users to easily monitor the vulnerable VMs for 
 - Metricbeat records metrics and statistics that it collects from systems and services, and ships them to any specified output.
 
 
-| Name     | Function          | IP Address | Operating System |
-|----------|-------------------|------------|------------------|
-| Jump Box | Gateway           | 10.0.0.4   | Linux            |
-| Web-1    | Web Server        | 10.0.0.5   | Linux            |
-| Web-2    | Web Server        | 10.0.0.6   | Linux            |
-| ELK      | Monitoring Server | 10.1.0.5   | Linux            |
+| Name                 | Function          | IP Address | Operating System            |
+|----------------------|-------------------|------------|-----------------------------|
+| Jump-Box-Provisioner | Gateway           | 10.0.0.4   | Linux Ubuntu 18.04 LTS Gen2 |
+| Web-1                | Web Server        | 10.0.0.5   | Linux Ubuntu 18.04 LTS Gen2 |
+| Web-2                | Web Server        | 10.0.0.6   | Linux Ubuntu 18.04 LTS Gen2 |
+| ELKvm                | Monitoring Server | 10.1.0.5   | Linux Ubuntu 18.04 LTS Gen2 |
 
 
 ### Access Policies
@@ -49,13 +49,12 @@ Machines within the network can only be accessed by Jump-Box-Provisioner VM.
 
 A summary of the access policies in place can be found in the table below.
 
-| Name          | Publicly Accessible | Allowed IP Addresses |
-|---------------|---------------------|----------------------|
-| Jump Box      | Yes                 | 99.158.45.25         |
-| Web-1         | No                  | 10.0.0.4             |
-| Web-2         | No                  | 10.0.0.4             |
-| ELK           | Only via port 5601. | 99.158.45.25         |
-| Load Balancer | Only via port 80.   | 99.158.45.25         |
+| Name                 | Publicly Accessible | Allowed IP Addresses |
+|----------------------|---------------------|----------------------|
+| Jump-Box-Provisioner | Yes                 | 99.158.45.25         |
+| Web-1                | No                  | 10.0.0.4             |
+| Web-2                | No                  | 10.0.0.4             |
+| ELKvm                | No                  | 99.158.45.25         |
 
 ### Elk Configuration
 
@@ -74,10 +73,10 @@ The following screenshot displays the result of running `docker ps` after succes
 ### Target Machines & Beats
 This ELK server is configured to monitor the following machines:
 
-| Machine | IP Address | Operating System |
-|---------|------------|------------------|
-| Web-1   | 10.0.0.5   | Linux            |
-| Web-2   | 10.0.0.6   | Linux            |
+| Machine | IP Address |
+|---------|------------|
+| Web-1   | 10.0.0.5   |
+| Web-2   | 10.0.0.6   |
 
 We have installed the following Beats on these machines:
 - Filebeat
@@ -91,16 +90,20 @@ These Beats allow us to collect the following information from each machine:
 In order to use the playbook, you will need to have an Ansible control node already configured. Assuming you have such a control node provisioned: 
 
 SSH into the control node and follow the steps below:
-- Copy the ansible.cfg file to ~/etc/ansible.
-- Update the hosts file to include the hosts that will be managed: [elk] 10.1.0.5
-- Run the playbook, and navigate to ____ to check that the installation worked as expected.
+- Copy the filebeat-config.yml file to /etc/ansible/files/filebeat-config.yml.
+- Update the filebeat-config.yml file to include the host ip address for the ELK vm for: output.elasticsearch and setup.kibana.
+- Run the playbook, and navigate to the ELK's public ip address 20.211.156.16:5601/app/kibana to check that the installation worked as expected.
 
-_TODO: Answer the following questions to fill in the blanks:_
-- _Which file is the playbook? Where do you copy it?_
-- _Which file do you update to make Ansible run the playbook on a specific machine? How do I specify which machine to install the ELK server on versus which to install Filebeat on?_
-- _Which URL do you navigate to in order to check that the ELK server is running?
+The playbook files are:
+- filebeat-playbook.yml- file is then copied to /etc/filebeat/filebeat.yml
+- metricbeat-playbook.yml- file is then copied to /etc/metricbeat/metricbeat.yml
+
+Now, specify the machine that will run the playbook by navigating into directory /etc/ansible/ and running nano against hosts files to add the IP address of the VM's. Then, create two collection of hosts ([azureweb] and [elk]) to specify the groups where the ELK server and Filebeat will be installed on.
+
+Lastly, navigate to the ELK's IP address: 20.211.156.16:5601/app/kibana to verify that the server is up and running.
 
 Commands to execute in order to run the Playbook:
 - ansible-playbook install-elk.yml
 - ansible-playbook filebeat-playbook.yml
 - ansible-playbook metricbeat-playbook.yml
+- ansible-playbook my-playbook.yml

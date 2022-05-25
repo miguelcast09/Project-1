@@ -100,6 +100,9 @@ The playbook files are:
 
 Now, specify the machine that will run the playbook by navigating into directory /etc/ansible/ and running nano against hosts files to add the IP address of the VM's. Then, create two collection of hosts ([azureweb] and [elk]) to specify the groups where the ELK server and Filebeat will be installed on.
 
+![hosts-file](https://user-images.githubusercontent.com/105833279/170382302-89ea1c6c-b4d7-4c38-bff1-f9acd7378105.png)
+
+
 Lastly, navigate to the ELK's IP address: 20.211.156.16:5601/app/kibana to verify that the server is up and running.
 
 Commands to execute in order to run the Playbook:
